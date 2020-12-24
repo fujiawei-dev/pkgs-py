@@ -1,7 +1,7 @@
 '''
 Date: 2020-12-22 11:29:49
 LastEditors: Rustle Karl
-LastEditTime: 2020-12-22 14:08:33
+LastEditTime: 2020-12-24 13:10:36
 '''
 import os.path
 
@@ -9,7 +9,7 @@ from setuptools import setup
 
 '''
 python setup.py sdist
-pip install dist/project-pkgs-0.0.2.tar.gz
+pip install dist/project-pkgs-0.0.3.tar.gz
 python setup.py bdist_wheel
 pip install twine
 twine upload dist/*
@@ -27,9 +27,9 @@ with open(os.path.join(cwd, 'README.md'), encoding='utf-8') as f:
 
 setup(
     name='project-pkgs',
-    py_modules=['color'],  # 给文本添加颜色
+    py_modules=['color', 'checksum'],
     packages=['logger'],
-    version='0.0.2',
+    version='0.0.3',
     license='BSD',
     author='Rustle Karl',
     author_email='fu.jiawei@outlook.com',
