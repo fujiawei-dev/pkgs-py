@@ -1,7 +1,7 @@
 '''
 Date: 2020-12-22 10:43:43
 LastEditors: Rustle Karl
-LastEditTime: 2021-01-09 09:59:32
+LastEditTime: 2021-01-09 15:41:29
 '''
 
 import logging
@@ -72,10 +72,16 @@ def get_logger(ns: str, logfile: str = '', ext='.log',
     return logger
 
 
-if __name__ == "__main__":
-    logger = get_logger('debug', 'debug')
+log = get_logger('root')
 
-    logger.debug("I don't know")
-    logger.info("I don't know")
-    logger.warning("I don't know")
-    logger.error("I don't know")
+debug = log.debug
+info = log.info
+warning = log.warning
+error = log.error
+
+
+if __name__ == "__main__":
+    debug("I don't know")
+    info("I don't know")
+    warning("I don't know")
+    error("I don't know")
