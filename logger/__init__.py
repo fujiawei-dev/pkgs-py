@@ -1,37 +1,52 @@
 '''
 Date: 2020-12-22 10:43:43
 LastEditors: Rustle Karl
-LastEditTime: 2021-01-09 15:41:29
+LastEditTime: 2021-01-16 09:49:02
 '''
 
 import logging
 import os
-from logging import Formatter, Logger
+from logging import DEBUG, ERROR, Formatter, INFO, Logger, WARNING
 from logging.handlers import RotatingFileHandler
-from logger.formatter import CustomFormatter
 
 from color import sbluef
+from logger.formatter import CustomFormatter
+
+levels = {
+    "debug": DEBUG,
+    "info": INFO,
+    "warn": WARNING,
+    "warning": WARNING,
+    "error": ERROR,
+}
+
+
+def convert_level(level: str):
+    return levels.get(level, INFO)
+
 
 default_config = {
-    'level': logging.INFO,
     'mode': 'w',
     'encoding': 'utf-8',
     'maxBytes': (1 << 20) * 50,  # MB
     'backupCount': 30,
 }
 
-default_logfile_format = "%(asctime)s %(levelname)s " \
-                         "%(pathname)s:%(lineno)s %(message)s"
+default_logfile_format = "%(asctime)s %(levelname)s %(pathname)s:%(lineno)s %(message)s"
 
-default_stdout_format = "> {}\n> %(asctime)s %(color)s"\
-    "[%(levelname)s] %(message)s\n".format(sbluef("%(pathname)s:%(lineno)s"))
+default_stdout_format = "> {}\n> %(asctime)s %(color)s[%(levelname)s] %(message)s\n". \
+    format(sbluef("%(pathname)s:%(lineno)s"))
 
 
-def get_logger(ns: str, logfile: str = '', ext='.log',
+def get_logger(ns: str, level: str = "debug", logfile: str = '', ext='.log',
                logdir='logs', stdout=True, **kwargs) -> Logger:
+    level = convert_level(level)
 
     logger = logging.getLogger(ns)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(level)
+
+    if logger.handlers:
+        return logger
 
     # 日志文件
     if logfile:
@@ -42,43 +57,34 @@ def get_logger(ns: str, logfile: str = '', ext='.log',
             logfile += ext
 
         logfile = os.path.join(logdir, logfile)
-
         file_handler = RotatingFileHandler(
-            logfile,
-            mode=kwargs.get('mode', default_config['mode']),
-            encoding=kwargs.get('encoding', default_config['encoding']),
-            maxBytes=kwargs.get('maxBytes', default_config['maxBytes']),
-            backupCount=kwargs.get(
-                'backupCount', default_config['backupCount']),
+                logfile,
+                mode=kwargs.get('mode', default_config['mode']),
+                encoding=kwargs.get('encoding', default_config['encoding']),
+                maxBytes=kwargs.get('maxBytes', default_config['maxBytes']),
+                backupCount=kwargs.get(
+                        'backupCount', default_config['backupCount']),
         )
-
-        file_handler.setLevel(kwargs.get('level', default_config['level']))
-
-        # 为文件输出设定格式
-        file_handler.setFormatter(Formatter(default_logfile_format))
-
+        file_handler.setLevel(level)
+        file_handler.setFormatter(Formatter(default_logfile_format))  # 为文件输出设定格式
         logger.addHandler(file_handler)
 
     # 控制台
     if stdout or not logfile:
         console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
-
-        # 控制台输出设定格式
-        console_handler.setFormatter(CustomFormatter(default_stdout_format))
-
+        console_handler.setLevel(level)
+        console_handler.setFormatter(CustomFormatter(default_stdout_format))  # 控制台输出设定格式
         logger.addHandler(console_handler)
 
     return logger
 
 
-log = get_logger('root')
+log = get_logger('unknown')
 
 debug = log.debug
 info = log.info
 warning = log.warning
 error = log.error
-
 
 if __name__ == "__main__":
     debug("I don't know")
