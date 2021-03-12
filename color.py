@@ -1,10 +1,15 @@
 '''
 Date: 2020-12-01 08:59:33
 LastEditors: Rustle Karl
-LastEditTime: 2020-12-22 10:36:29
+LastEditTime: 2021-03-12 12:20:44
 '''
+import os
 
-__unset_color = "\033[0m"  # 中断颜色
+# 是否启用颜色
+__enable_color = os.getenv("TERM_COLOR", "enable") != "disable"
+
+# 中断颜色
+__unset_color = "\033[0m"
 
 
 class Color(object):
@@ -93,19 +98,28 @@ def convert_color(color: str) -> str:
     return __color_dict.get(color, __red)
 
 
-def set_color(color) -> str:
+def set_color(color: str) -> str:
+    if not __enable_color:
+        return ""
+
     return "\033[%sm" % convert_color(color)
 
 
-def unset_color(msg, light=False):
+def unset_color(msg: str):
+    if not __enable_color:
+        return msg
+
     return msg + __unset_color
 
 
-def scolorf(color, msg) -> str:
+def scolorf(color: str, msg: str) -> str:
+    if not __enable_color:
+        return msg
+
     return "\033[%sm%s\033[0m" % (convert_color(color), msg)
 
 
-def colorln(color, msg):
+def colorln(color: str, msg: str):
     print(scolorf(color, msg))
 
 
@@ -174,7 +188,6 @@ def whiteln(msg, light=False):
 
 
 if __name__ == "__main__":
-
     blackln('come on')
     blackln('come on', True)
 

@@ -1,7 +1,7 @@
 '''
 Date: 2020-12-22 10:41:08
 LastEditors: Rustle Karl
-LastEditTime: 2021-01-16 09:48:19
+LastEditTime: 2021-03-12 12:20:38
 '''
 from logging import Formatter, LogRecord
 
@@ -15,10 +15,10 @@ default_color_config = {
 }
 
 
-class CustomFormatter(Formatter):
+class LogFormatter(Formatter):
 
     def __init__(self, fmt, datefmt=None, config=None) -> None:
-        super(CustomFormatter, self).__init__(fmt, datefmt)
+        super(LogFormatter, self).__init__(fmt, datefmt)
         if config is None:
             config = default_color_config
         self.config = config
@@ -29,4 +29,4 @@ class CustomFormatter(Formatter):
     def format(self, record: LogRecord) -> str:
         record.color = self.parse_color(record.levelname)
         record.pathname = record.pathname.replace("\\", "/")
-        return unset_color(super(CustomFormatter, self).format(record))
+        return unset_color(super(LogFormatter, self).format(record))

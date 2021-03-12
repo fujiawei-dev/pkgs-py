@@ -1,16 +1,15 @@
 '''
 Date: 2020-12-22 10:43:43
 LastEditors: Rustle Karl
-LastEditTime: 2021-01-16 09:49:02
+LastEditTime: 2021-03-12 12:20:11
 '''
-
 import logging
 import os
 from logging import DEBUG, ERROR, Formatter, INFO, Logger, WARNING
 from logging.handlers import RotatingFileHandler
 
 from color import sbluef
-from logger.formatter import CustomFormatter
+from logger.formatter import LogFormatter
 
 levels = {
     "debug": DEBUG,
@@ -73,7 +72,7 @@ def get_logger(ns: str, level: str = "debug", logfile: str = '', ext='.log',
     if stdout or not logfile:
         console_handler = logging.StreamHandler()
         console_handler.setLevel(level)
-        console_handler.setFormatter(CustomFormatter(default_stdout_format))  # 控制台输出设定格式
+        console_handler.setFormatter(LogFormatter(default_stdout_format))  # 控制台输出设定格式
         logger.addHandler(console_handler)
 
     return logger
