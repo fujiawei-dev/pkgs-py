@@ -4,7 +4,7 @@
 .NOTPARALLEL: ;          # wait for target to finish
 .EXPORT_ALL_VARIABLES: ; # send all vars to shell
 
-VERSION = 0.0.7
+VERSION = 1.0.0
 PACKAGE = project-pkgs
 
 all: setup
